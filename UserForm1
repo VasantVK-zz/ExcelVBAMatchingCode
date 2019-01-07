@@ -1,0 +1,6 @@
+Private Sub CommandButton1_Click()
+    major = mTXT
+    course = cTXT
+    subjects = sTXT
+    Me.Hide
+End Sub
