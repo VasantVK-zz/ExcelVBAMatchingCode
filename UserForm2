@@ -1,0 +1,52 @@
+Public active As Integer
+
+Private Sub CancelBtn_Click()
+    Me.Hide
+End Sub
+
+Private Sub MatchBtn_Click()
+    Dim a As Integer
+    
+    MsgBox "Below is " & TutorsLB.List(active - 1) & "'s Contact Info:" & vbNewLine & vbNewLine & _
+    "Phone Number: " & Cadet.Range("E1").Offset(active) & vbNewLine & _
+    "Email Address: " & Cadet.Range("F1").Offset(active)
+    
+    Tutor.Range("M1").Offset(Cadet.Range("A1").Offset(active)) = Tutor.Range("M1").Offset(Cadet.Range("A1").Offset(active)) + 1
+    
+    Me.Hide
+End Sub
+
+
+Private Sub TutorsLB_Change()
+    Dim a As Integer, any1 As Boolean
+    
+    any1 = False
+    For a = 0 To TutorsLB.ListCount - 1
+        If TutorsLB.Selected(a) Then
+            active = a + 1
+            any1 = True
+        End If
+    Next a
+    
+    If any1 Then
+        TextBox1 = Tutor.Range("G1").Offset(Cadet.Range("A1").Offset(active))
+        TextBox2 = Tutor.Range("I1").Offset(Cadet.Range("A1").Offset(active))
+        TextBox3 = Tutor.Range("J1").Offset(Cadet.Range("A1").Offset(active))
+        TextBox4 = Tutor.Range("M1").Offset(Cadet.Range("A1").Offset(active))
+    End If
+    
+    
+End Sub
+
+Private Sub UserForm_Initialize()
+    Dim numList As Integer, a As Integer
+    
+    numList = Range(Cadet.Range("A2"), Cadet.Range("A2").End(xlDown)).Count
+    With TutorsLB
+        .Clear
+        For a = 1 To numList
+            .AddItem (Cadet.Range("C1").Offset(a) & " " & Cadet.Range("D1").Offset(a))
+        Next a
+        .ListIndex = .ListCount - 1
+    End With
+End Sub
