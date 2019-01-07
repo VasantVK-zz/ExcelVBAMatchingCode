@@ -1,0 +1,150 @@
+'Code made by Vasant Kurvari
+'Contact by email at vasantvk@tamu.edu or vasant290@gmail.com
+'Contact by phone at (469) 531-4384
+'Let me know if you have any questions, comments, or concerns. Thank you.
+'Last updated 10 Jan 19
+
+Option Explicit
+Public major As String, course As String, subjects As String
+
+Sub Matching()
+    Dim timeRng As Range, majorRng As Range, classRng As Range, subjectRng As Range, collegeRng As Range
+    
+    
+    Cadet.Cells.Clear
+    
+    Set timeRng = Tutor.Range("A1")
+    Set majorRng = Tutor.Range("G1")
+    Set classRng = Tutor.Range("I1")
+    Set subjectRng = Tutor.Range("J1")
+    
+    Cadet.Range("A1") = "Number"
+    Cadet.Range("B1") = "Priority"
+    Cadet.Range("C1") = "First Name"
+    Cadet.Range("D1") = "Last Name"
+    Cadet.Range("E1") = "Phone Number"
+    Cadet.Range("F1") = "Email"
+    
+    Dim indexComma As Integer, elem As Integer
+    
+    MatchForm.Show
+    
+    'MsgBox "Major: " & major & vbNewLine & "Course: " & course & vbNewLine & "Subject: " & subjects
+    
+    Dim numTutors As Integer, i As Integer, j As Integer, k As Integer
+    
+    numTutors = Range(Tutor.Range("A2"), Tutor.Range("A2").End(xlDown)).Count
+    j = 1
+    
+    ReDim numWorked(1 To numTutors)
+    
+    'Splitting the cadet's subjects into an array
+    Dim strCadet As String, arrCadet() As String
+    strCadet = subjects
+    indexComma = 0
+    elem = 0
+    
+    
+    Do
+        indexComma = InStr(1, strCadet, ",")
+        elem = elem + 1
+        ReDim Preserve arrCadet(1 To elem)
+        If indexComma <> 0 Then
+            arrCadet(elem) = LCase(Left(strCadet, indexComma - 1))
+            strCadet = Mid(strCadet, indexComma + 2)
+        Else
+            arrCadet(elem) = LCase(strCadet)
+        End If
+    Loop While (indexComma <> 0)
+    'End student's array
+    
+    Dim Priority() As Integer
+    ReDim Priority(1 To numTutors)
+    
+    
+    Dim strTutor As String, arrTutor() As String, z As Integer
+    
+    For i = 1 To numTutors
+    
+            'Priority Start
+            '''''''''''''''
+            
+            'Major Priority
+            If (majorRng.Offset(i) = major) Then
+                Priority(i) = Priority(i) + 1
+            End If
+            
+            'Course Priority
+            If (classRng.Offset(i) = course) Then
+                Priority(i) = Priority(i) + 2
+            End If
+            
+            
+            'Splitting the tutor's subjects into an array
+            strTutor = subjectRng.Offset(i)
+            elem = 0
+            Do
+                indexComma = InStr(1, strTutor, ",")
+                elem = elem + 1
+                ReDim Preserve arrTutor(1 To elem)
+                If indexComma <> 0 Then
+                    arrTutor(elem) = LCase(Left(strTutor, indexComma - 1))
+                    strTutor = Mid(strTutor, indexComma + 2)
+                Else
+                    arrTutor(elem) = LCase(strTutor)
+                End If
+            Loop While (indexComma <> 0)
+            'End tutor's array
+            
+            'Subject Priority
+            For z = LBound(arrTutor) To UBound(arrTutor)
+                If (UBound(Filter(arrCadet, arrTutor(z))) > -1) Then
+                    Priority(i) = Priority(i) + 1
+                End If
+            Next z
+            
+            'Major or Class must be an exact match to be on the list
+            If (majorRng.Offset(i) = major Or classRng.Offset(i) = course) Then
+                Cadet.Range("A1").Offset(j, 0) = i
+                Cadet.Range("A1").Offset(j, 1) = Priority(i)
+                Cadet.Range("A1").Offset(j, 2) = Tutor.Range("B1").Offset(i)
+                Cadet.Range("A1").Offset(j, 3) = Tutor.Range("C1").Offset(i)
+                Cadet.Range("A1").Offset(j, 4) = Tutor.Range("K1").Offset(i)
+                Cadet.Range("A1").Offset(j, 5) = Tutor.Range("L1").Offset(i)
+                Cadet.Range("A1").Offset(j, 5) = Tutor.Range("L1").Offset(i)
+                j = j + 1
+            End If
+            '''''''''''''
+            'Priority End
+    Next i
+    
+    
+    
+    'Bubble Sort Start
+    Dim rng1 As Range, rng2 As Range, tempRng As Range
+    Dim sorted As Boolean, n As Integer
+    
+    n = numTutors
+    
+    Do
+        sorted = True
+        For i = 1 To n
+            Set rng1 = Cadet.Range(Cadet.Range("A1").Offset(i), Cadet.Range("A1").Offset(i).End(xlToRight))
+            Set rng2 = Cadet.Range(Cadet.Range("A1").Offset(i + 1), Cadet.Range("A1").Offset(i + 1).End(xlToRight))
+            If (Cadet.Range("B1").Offset(i) < Cadet.Range("B1").Offset(i + 1)) Then
+                Set tempRng = Range(Cadet.Range("A1").End(xlDown).Offset(2), Cadet.Range("A1").End(xlDown).Offset(2, 7))
+                
+                rng1.Copy tempRng
+                rng2.Copy rng1
+                tempRng.Copy rng2
+                sorted = False
+            End If
+        Next i
+        n = n - 1
+    Loop Until sorted
+    Cadet.Range(Cadet.Range("A1").End(xlDown).Offset(2), Cadet.Range("A1").End(xlDown).Offset(2, 7)).Clear
+    'Sort End
+    
+    TutorsForm.Show
+    
+End Sub
