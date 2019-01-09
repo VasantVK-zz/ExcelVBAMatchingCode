@@ -134,34 +134,37 @@ Sub Matching()
     Next i
     
     
-    
-    'Bubble Sort Start
-    Dim rng1 As Range, rng2 As Range, tempRng As Range
-    Dim sorted As Boolean, n As Integer
-    
-    n = numTutors
-    
-    Do
-        sorted = True
-        For i = 1 To n
-            Set rng1 = Cadet.Range(Cadet.Range("A1").Offset(i), Cadet.Range("A1").Offset(i).End(xlToRight))
-            Set rng2 = Cadet.Range(Cadet.Range("A1").Offset(i + 1), Cadet.Range("A1").Offset(i + 1).End(xlToRight))
-            If (Cadet.Range("B1").Offset(i) < Cadet.Range("B1").Offset(i + 1)) Then
-                Set tempRng = Range(Cadet.Range("A1").End(xlDown).Offset(2), Cadet.Range("A1").End(xlDown).Offset(2, 7))
-                
-                rng1.Copy tempRng
-                rng2.Copy rng1
-                tempRng.Copy rng2
-                sorted = False
-            End If
-        Next i
-        n = n - 1
-    Loop Until sorted
-    Cadet.Range(Cadet.Range("A1").End(xlDown).Offset(2), Cadet.Range("A1").End(xlDown).Offset(2, 7)).Clear
-    'Sort End
-    
-    Application.Wait (Now + TimeValue("00:00:01"))
-    
-    TutorsForm.Show
+    If (Cadet.Range("A1").Offset(1) <> "") Then
+        'Bubble Sort Start
+        Dim rng1 As Range, rng2 As Range, tempRng As Range
+        Dim sorted As Boolean, n As Integer
+        
+        n = numTutors
+        
+        Do
+            sorted = True
+            For i = 1 To n
+                Set rng1 = Cadet.Range(Cadet.Range("A1").Offset(i), Cadet.Range("A1").Offset(i).End(xlToRight))
+                Set rng2 = Cadet.Range(Cadet.Range("A1").Offset(i + 1), Cadet.Range("A1").Offset(i + 1).End(xlToRight))
+                If (Cadet.Range("B1").Offset(i) < Cadet.Range("B1").Offset(i + 1)) Then
+                    Set tempRng = Range(Cadet.Range("A1").End(xlDown).Offset(2), Cadet.Range("A1").End(xlDown).Offset(2, 7))
+                    
+                    rng1.Copy tempRng
+                    rng2.Copy rng1
+                    tempRng.Copy rng2
+                    sorted = False
+                End If
+            Next i
+            n = n - 1
+        Loop Until sorted
+        Cadet.Range(Cadet.Range("A1").End(xlDown).Offset(2), Cadet.Range("A1").End(xlDown).Offset(2, 7)).Clear
+        'Sort End
+        
+        Application.Wait (Now + TimeValue("00:00:01"))
+        
+        TutorsForm.Show
+    Else
+        MsgBox "No Tutors Available"
+    End If
     
 End Sub
