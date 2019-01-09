@@ -41,7 +41,7 @@ End Sub
 Private Sub UserForm_Initialize()
     Dim numList As Integer, a As Integer
     
-    numList = Range(Cadet.Range("A2"), Cadet.Range("A2").End(xlDown)).Count
+    numList = Range(Cadet.Range("A1"), Cadet.Range("A1").End(xlDown)).Count - 1
     With TutorsLB
         .Clear
         For a = 1 To numList
