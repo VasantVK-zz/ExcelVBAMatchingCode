@@ -1,7 +1,7 @@
 Public active As Integer
 
 Private Sub CancelBtn_Click()
-    Me.Hide
+    Unload Me
 End Sub
 
 Private Sub MatchBtn_Click()
@@ -13,7 +13,7 @@ Private Sub MatchBtn_Click()
     
     Tutor.Range("M1").Offset(Cadet.Range("A1").Offset(active)) = Tutor.Range("M1").Offset(Cadet.Range("A1").Offset(active)) + 1
     
-    Me.Hide
+    Unload Me
 End Sub
 
 
