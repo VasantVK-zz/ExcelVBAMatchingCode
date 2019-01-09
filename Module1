@@ -39,7 +39,7 @@ Sub Matching()
     ReDim numWorked(1 To numTutors)
     
     'Splitting the cadet's subjects into an array
-    Dim strCadet As String, arrCadet() As String
+    Dim strCadet As String, arrCadetS() As String
     strCadet = subjects
     indexComma = 0
     elem = 0
@@ -48,12 +48,12 @@ Sub Matching()
     Do
         indexComma = InStr(1, strCadet, ",")
         elem = elem + 1
-        ReDim Preserve arrCadet(1 To elem)
+        ReDim Preserve arrCadetS(1 To elem)
         If indexComma <> 0 Then
-            arrCadet(elem) = LCase(Left(strCadet, indexComma - 1))
+            arrCadetS(elem) = LCase(Left(strCadet, indexComma - 1))
             strCadet = Mid(strCadet, indexComma + 2)
         Else
-            arrCadet(elem) = LCase(strCadet)
+            arrCadetS(elem) = LCase(strCadet)
         End If
     Loop While (indexComma <> 0)
     'End student's array
@@ -62,7 +62,7 @@ Sub Matching()
     ReDim Priority(1 To numTutors)
     
     
-    Dim strTutor As String, arrTutor() As String, z As Integer
+    Dim strTutor As String, arrTutorS() As String, arrTutorC() As String, z As Integer
     
     For i = 1 To numTutors
     
@@ -70,15 +70,30 @@ Sub Matching()
             '''''''''''''''
             
             'Major Priority
-            If (majorRng.Offset(i) = major) Then
+            If (LCase(majorRng.Offset(i)) = LCase(major)) Then
                 Priority(i) = Priority(i) + 1
             End If
             
+            'Splitting the tutor's classes into an array
+            strTutor = classRng.Offset(i)
+            elem = 0
+            Do
+                indexComma = InStr(1, strTutor, ",")
+                elem = elem + 1
+                ReDim Preserve arrTutorC(1 To elem)
+                If indexComma <> 0 Then
+                    arrTutorC(elem) = LCase(Left(strTutor, indexComma - 1))
+                    strTutor = Mid(strTutor, indexComma + 2)
+                Else
+                    arrTutorC(elem) = LCase(strTutor)
+                End If
+            Loop While (indexComma <> 0)
+            'End tutor's array
+            
             'Course Priority
-            If (classRng.Offset(i) = course) Then
+            If (UBound(Filter(arrTutorC, LCase(course))) > -1) Then
                 Priority(i) = Priority(i) + 2
             End If
-            
             
             'Splitting the tutor's subjects into an array
             strTutor = subjectRng.Offset(i)
@@ -86,25 +101,25 @@ Sub Matching()
             Do
                 indexComma = InStr(1, strTutor, ",")
                 elem = elem + 1
-                ReDim Preserve arrTutor(1 To elem)
+                ReDim Preserve arrTutorS(1 To elem)
                 If indexComma <> 0 Then
-                    arrTutor(elem) = LCase(Left(strTutor, indexComma - 1))
+                    arrTutorS(elem) = LCase(Left(strTutor, indexComma - 1))
                     strTutor = Mid(strTutor, indexComma + 2)
                 Else
-                    arrTutor(elem) = LCase(strTutor)
+                    arrTutorS(elem) = LCase(strTutor)
                 End If
             Loop While (indexComma <> 0)
             'End tutor's array
             
             'Subject Priority
-            For z = LBound(arrTutor) To UBound(arrTutor)
-                If (UBound(Filter(arrCadet, arrTutor(z))) > -1) Then
+            For z = LBound(arrTutorS) To UBound(arrTutorS)
+                If (UBound(Filter(arrCadetS, arrTutorS(z))) > -1) Then
                     Priority(i) = Priority(i) + 1
                 End If
             Next z
             
             'Major or Class must be an exact match to be on the list
-            If (majorRng.Offset(i) = major Or classRng.Offset(i) = course) Then
+            If (LCase(majorRng.Offset(i)) = LCase(major) Or LCase(classRng.Offset(i)) = LCase(course)) Then
                 Cadet.Range("A1").Offset(j, 0) = i
                 Cadet.Range("A1").Offset(j, 1) = Priority(i)
                 Cadet.Range("A1").Offset(j, 2) = Tutor.Range("B1").Offset(i)
@@ -144,6 +159,8 @@ Sub Matching()
     Loop Until sorted
     Cadet.Range(Cadet.Range("A1").End(xlDown).Offset(2), Cadet.Range("A1").End(xlDown).Offset(2, 7)).Clear
     'Sort End
+    
+    Application.Wait (Now + TimeValue("00:00:01"))
     
     TutorsForm.Show
     
