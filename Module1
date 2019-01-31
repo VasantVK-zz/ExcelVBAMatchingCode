@@ -2,7 +2,7 @@
 'Contact by email at vasantvk@tamu.edu or vasant290@gmail.com
 'Contact by phone at (469) 531-4384
 'Let me know if you have any questions, comments, or concerns. Thank you.
-'Last updated 10 Jan 19
+'Last updated 30 Jan 19
 
 Option Explicit
 Public major As String, course As String, subjects As String
@@ -24,6 +24,9 @@ Sub Matching()
     Cadet.Range("D1") = "Last Name"
     Cadet.Range("E1") = "Phone Number"
     Cadet.Range("F1") = "Email"
+    Cadet.Range("G1") = "Can Provide Major Counseling"
+    Cadet.Range("H1") = "Can Help Write Papers"
+    Cadet.Range("I1") = "Additional Comments"
     
     Dim indexComma As Integer, elem As Integer
     
@@ -126,7 +129,9 @@ Sub Matching()
                 Cadet.Range("A1").Offset(j, 3) = Tutor.Range("C1").Offset(i)
                 Cadet.Range("A1").Offset(j, 4) = Tutor.Range("K1").Offset(i)
                 Cadet.Range("A1").Offset(j, 5) = Tutor.Range("L1").Offset(i)
-                Cadet.Range("A1").Offset(j, 5) = Tutor.Range("L1").Offset(i)
+                Cadet.Range("A1").Offset(j, 6) = Tutor.Range("N1").Offset(i)
+                Cadet.Range("A1").Offset(j, 7) = Tutor.Range("P1").Offset(i)
+                Cadet.Range("A1").Offset(j, 8) = Tutor.Range("M1").Offset(i)
                 j = j + 1
             End If
             '''''''''''''
