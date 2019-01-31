@@ -19,6 +19,9 @@ End Sub
 
 Private Sub TutorsLB_Change()
     Dim a As Integer, any1 As Boolean
+    CheckBox1 = False
+    CheckBox2 = False
+    
     
     any1 = False
     For a = 0 To TutorsLB.ListCount - 1
@@ -32,7 +35,13 @@ Private Sub TutorsLB_Change()
         TextBox1 = Tutor.Range("G1").Offset(Cadet.Range("A1").Offset(active))
         TextBox2 = Tutor.Range("I1").Offset(Cadet.Range("A1").Offset(active))
         TextBox3 = Tutor.Range("J1").Offset(Cadet.Range("A1").Offset(active))
-        TextBox4 = Tutor.Range("M1").Offset(Cadet.Range("A1").Offset(active))
+        TextBox4 = Tutor.Range("Q1").Offset(Cadet.Range("A1").Offset(active))
+        If (Tutor.Range("N1").Offset(Cadet.Range("A1").Offset(active)) = "Yes") Then
+            CheckBox1 = True
+        End If
+        If (Tutor.Range("P1").Offset(Cadet.Range("A1").Offset(active)) = "Yes") Then
+            CheckBox2 = True
+        End If
     End If
     
     
